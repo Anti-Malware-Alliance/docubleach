@@ -1,16 +1,25 @@
 """This module removes any and all macros/dynamic content from MS Office files.
 
+VBA and OLE content in MS Office files can, and have sometimes been made to, act as vehicles for malware delivery.
+
+Microsoft has previously attempted to protect users from macros by disabling them by default.
+
+However, anybody is able to enable macros on an MS Office file before sending them on to a potential victim.
+
+This module enables users to simply and safely remove any and all macros/dynamic content from MS Office files.
+
 It is part of a suite of programs developed by the AntiMalware Alliance.
 
 Visit https://github.com/Anti-Malware-Alliance for more details about our organisation and projects.
-
-Feel free to contact benjamin.mcgregor2002@gmail.com for any questions regarding this module.
 """
 from argparse import ArgumentParser
 from os import rename, path, remove
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 
+
+# List of supported file types
+supported_formats = ["docx", "docm"]
 
 # Unzip file function
 # Converts file to a .zip archive and extracts it to file directory
@@ -64,13 +73,34 @@ def rezip_file(file):
     rmtree(file + "_temp")
 
 
-# Argument parser
-parser = ArgumentParser()
-parser.add_argument("file", help="file to be bleached")
-parser.add_argument("-c", help="notify if macros or potentially dangerous content is found", action="store_true")
-args = parser.parse_args()
+# Validate file format function
+# Checks to see if file is supported
+def validate_format(file):
+    if file.split(".")[-1].lower() in supported_formats:
+        return True
+    else:
+        return False
 
-# Bleaching
-unzip_file(args.file)
-remove_macros(args.file, args.c)
-rezip_file(args.file)
+
+# Main function
+# Initialises the argument parser and calls functions to bleach the file
+def main():
+
+    # Argument parser
+    parser = ArgumentParser()
+    parser.add_argument("file", help="file to be bleached")
+    parser.add_argument("-c", help="notify if macros or potentially dangerous content is found", action="store_true")
+    args = parser.parse_args()
+
+    # Validate file format
+    if validate_format(args.file):
+        # Bleaching
+        unzip_file(args.file)
+        remove_macros(args.file, args.c)
+        rezip_file(args.file)
+    else:
+        print("Unsupported file format.")
+
+
+if __name__ == "__main__":
+    main()
