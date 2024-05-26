@@ -26,8 +26,16 @@ def unzip_file(file):
     rename(file + '.zip', file)
 
 
+def remove_macros(notify):
+    pass
+
+
 # Argument parser
 parser = ArgumentParser()
 parser.add_argument("file", help="file to be bleached")
+parser.add_argument("-c", "--check", help="notify if macros or potentially dangerous content is found")
 args = parser.parse_args()
+
+# Bleaching
 unzip_file(args.file)
+remove_macros(args.check)
