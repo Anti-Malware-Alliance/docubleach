@@ -9,6 +9,7 @@ Feel free to contact benjamin.mcgregor2002@gmail.com for any questions regarding
 from argparse import ArgumentParser
 from os import rename, path, remove
 from zipfile import ZipFile
+from shutil import make_archive, rmtree
 
 
 # Unzip file function
@@ -16,14 +17,14 @@ from zipfile import ZipFile
 def unzip_file(file):
 
     # Convert to zip archive
-    rename(file, file + '.zip')
+    rename(file, file + ".zip")
 
     # Extract contents into temporary folder
     with ZipFile(file + ".zip", 'r') as zip_ref:
         zip_ref.extractall(file + "_temp")
 
-    # Revert file name
-    rename(file + '.zip', file)
+    # Delete original file
+    remove(file + ".zip")
 
 
 # Remove macros function
@@ -49,6 +50,20 @@ def remove_macros(file, notify):
             print("No macros detected.")
 
 
+# Rezip function
+# Re-zips the unzipped file and restores its original file extension
+def rezip_file(file):
+
+    # Zip bleached folder
+    make_archive(file, "zip", file + "_temp")
+
+    # Convert back into original file format
+    rename(file + ".zip", file)
+
+    # Delete temporary folder
+    rmtree(file + "_temp")
+
+
 # Argument parser
 parser = ArgumentParser()
 parser.add_argument("file", help="file to be bleached")
@@ -58,3 +73,4 @@ args = parser.parse_args()
 # Bleaching
 unzip_file(args.file)
 remove_macros(args.file, args.c)
+rezip_file(args.file)
