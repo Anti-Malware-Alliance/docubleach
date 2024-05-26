@@ -14,12 +14,15 @@ Visit https://github.com/Anti-Malware-Alliance for more details about our organi
 """
 from argparse import ArgumentParser
 from os import rename, path, remove
+from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 
 
 # List of supported file types
 supported_formats = ["docx", "docm"]
+
+FILESIZE_LIMIT = 209715200
 
 # Unzip file function
 # Converts file to a .zip archive and extracts it to file directory
@@ -74,11 +77,21 @@ def rezip_file(file):
 
 
 # Validate file format function
-# Checks to see if file is supported
-def validate_format(file):
+# Checks to see if file is supported and within size limit
+def validate_file(file):
+
+    # Check file format support
     if file.split(".")[-1].lower() in supported_formats:
-        return True
+
+        # Check file size within limit
+        if getsize(file) < FILESIZE_LIMIT:
+            return True
+        else:
+            print("File exceeds size limit.")
+            return False
+
     else:
+        print("Unsupported file format.")
         return False
 
 
@@ -92,14 +105,12 @@ def main():
     parser.add_argument("-c", help="notify if macros or potentially dangerous content is found", action="store_true")
     args = parser.parse_args()
 
-    # Validate file format
-    if validate_format(args.file):
+    # Validate file
+    if validate_file(args.file):
         # Bleaching
         unzip_file(args.file)
         remove_macros(args.file, args.c)
         rezip_file(args.file)
-    else:
-        print("Unsupported file format.")
 
 
 if __name__ == "__main__":
