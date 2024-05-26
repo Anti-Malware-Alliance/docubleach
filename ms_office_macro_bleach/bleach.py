@@ -4,9 +4,13 @@ VBA and OLE content in MS Office files can, and have sometimes been made to, act
 
 Microsoft has previously attempted to protect users from macros by disabling them by default.
 
-However, anybody is able to enable macros on an MS Office file before sending them on to a potential victim.
+However, anybody is able to enable macros in an MS Office file before sending them on to a potential victim.
 
 This module enables users to simply and safely remove any and all macros/dynamic content from MS Office files.
+
+It converts the given file into a '.zip' archive, unzips it, and deletes the files containing macro data.
+
+It then re-zips the unzipped archive and reverts it to its original file format.
 
 It is part of a suite of programs developed by the AntiMalware Alliance.
 
@@ -24,8 +28,8 @@ supported_formats = ["docx", "docm"]
 
 FILESIZE_LIMIT = 209715200
 
+
 # Unzip file function
-# Converts file to a .zip archive and extracts it to file directory
 def unzip_file(file):
 
     # Convert to zip archive
@@ -58,8 +62,6 @@ def remove_macros(file, notify):
     if notify:
         if macros_found:
             print("Macros detected and removed.")
-        else:
-            print("No macros detected.")
 
 
 # Rezip function

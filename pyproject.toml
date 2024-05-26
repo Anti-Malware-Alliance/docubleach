@@ -2,7 +2,7 @@
 name = "ms-office-macro-bleach"
 version = "0.1.0"
 description = "Tool to purge and remove all macro and dynamic content from an MS Office file"
-authors = ["Patterbear <benjamin.mcgregor2002@gmail.com>"]
+authors = ["Patterbear"]
 license = "MIT"
 readme = "README.md"
 
