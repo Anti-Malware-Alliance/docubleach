@@ -11,6 +11,8 @@ After output is recorded, it is subsequently deleted as to not occupy storage un
 Valid files containing macros are restored to their original form after testing to ensure test repeatability.
 
 This is because the purpose of these tests is to check file validation, not macro removal.
+
+All tests are written for and conducted using pytest.
 """
 
 from subprocess import check_output
