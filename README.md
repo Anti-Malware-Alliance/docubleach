@@ -1,4 +1,4 @@
-![MS Office Macro Bleach](docs\images\bleach.jpg)
+![MS Office Macro Bleach](docs/images/bleach.jpg)
 
 
 # MS Office Macro Bleach
