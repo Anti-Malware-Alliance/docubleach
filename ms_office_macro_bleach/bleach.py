@@ -23,7 +23,23 @@ from zipfile import ZipFile
 from shutil import make_archive, rmtree
 
 
-supported_formats = ["docx", "docm"]
+supported_formats = [
+    "docx",
+    "docm",
+    "dotx",
+    "dotm",
+    "pptx",
+    "pptm",
+    "potx",
+    "potm",
+    "ppsx",
+    "ppsm",
+    "xlsx",
+    "xlsm",
+    "xltx",
+    "xltm",
+]
+
 
 FILESIZE_LIMIT = 209715200
 
