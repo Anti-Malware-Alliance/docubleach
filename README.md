@@ -3,7 +3,7 @@
 
 # MS Office Macro Bleach
 
-A command-line tool designed to detect and purge any and all macros and dynamic content from MS Office files.
+A command-line tool designed to detect and purge any and all macros and dynamic content from commonly used office document formats (including MS Office Files, PDFs, etc.).
 
 It currently supports '.docm' and'.docx' files and will continue to expand its file support with every released version. The next file types to be supported will be '.pdf'' and '.doc'.
 
