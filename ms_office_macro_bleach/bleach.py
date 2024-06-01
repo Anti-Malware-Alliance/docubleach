@@ -40,6 +40,12 @@ supported_formats = [
     "xltm",
 ]
 
+macro_folders = {
+    "do": "word",
+    "pp": "ppt",
+    "po": "ppt",
+    "xl": "xl",
+}
 
 FILESIZE_LIMIT = 209715200
 
@@ -55,13 +61,16 @@ def unzip_file(file):
 
 def remove_macros(file, notify):
     macros_found = False
+    file_type = file.split(".")[-1].lower()
 
-    if path.exists(file + "_temp/word/vbaProject.bin"):
-        remove(file + "_temp/word/vbaProject.bin")
+    macro_folder = macro_folders.get(file_type[:2])
+
+    if path.exists(file + f"_temp/{macro_folder}/vbaProject.bin"):
+        remove(file + f"_temp/{macro_folder}/vbaProject.bin")
         macros_found = True
 
-    if path.exists(file + "_temp/word/vbaData.xml"):
-        remove(file + "_temp/word/vbaData.xml")
+    if path.exists(file + f"_temp/{macro_folder}/vbaData.xml"):
+        remove(file + f"_temp/{macro_folder}/vbaData.xml")
         macros_found = True
 
     if notify:
