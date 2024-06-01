@@ -93,7 +93,7 @@ def test_powerpoint_show():
 def test_powerpoint_show_with_macros():
     copyfile("test_files/powerpoint_show_with_macros.ppsm", "test_files/powerpoint_show_with_macros.ppsm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/test_files/powerpoint_show_with_macros.ppsm -c", encoding='utf-8')
+    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_show_with_macros.ppsm -c", encoding='utf-8')
 
     remove("test_files/powerpoint_show_with_macros.ppsm")
     rename("test_files/powerpoint_show_with_macros.ppsm.bak", "test_files/powerpoint_show_with_macros.ppsm")
