@@ -105,10 +105,10 @@ def rezip_file(file):
     rmtree(file + "_temp")
 
 
-def remove_bff_macros(file, notify):
+def convert_to_ooxml(file):
     file_type = file.split(".")[-1].lower()
     input_file = path.abspath(file)
-    output_file = path.abspath(file + ".tmp")
+    output_file = path.abspath("temp_" + file + "x")
 
     if file_type == "doc":
         app = client.Dispatch("Word.Application")
@@ -131,8 +131,45 @@ def remove_bff_macros(file, notify):
     office_file.Close()
     app.Quit()
 
+
+def convert_to_bff(file):
+    file_type = file.split(".")[-1].lower()
+    input_file = path.abspath("temp_" + file + "x")
+    output_file = path.abspath("temp_" + file)
+
+    if file_type == "doc":
+        app = client.Dispatch("Word.Application")
+        app.Visible = False
+        output_type = 0
+        office_file = app.Documents.Open(input_file)
+    elif file_type == "ppt":
+        app = client.Dispatch("PowerPoint.Application")
+        output_type = 1
+        office_file = app.Presentations.Open(input_file, WithWindow=False)
+    elif file_type == "xls":
+        app = client.Dispatch("Excel.Application")
+        app.Visible = False
+        output_type = 56
+        office_file = app.Workbooks.Open(input_file)
+    else:
+        return
+
+    office_file.SaveAs(output_file, output_type)
+    office_file.Close()
+    app.Quit()
+
     remove(input_file)
-    rename(output_file, input_file + 'x')
+    remove(file)
+    rename(output_file, file)
+
+
+def remove_bff_macros(file, notify):
+    convert_to_ooxml(file)
+    remove_ooxml_macros("temp_" + file + "x", notify)
+    convert_to_bff(file)
+
+    if notify:
+        print("Binary File Format macro sectors wiped.")
 
 
 def validate_file(file):
