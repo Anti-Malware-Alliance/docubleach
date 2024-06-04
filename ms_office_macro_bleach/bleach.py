@@ -52,8 +52,8 @@ ooxml_macro_folders = {
 
 bff_formats = [
     "doc",
-    #"ppt",
-    #"xls",
+    "ppt",
+    "xls",
 ]
 
 FILESIZE_LIMIT = 209715200
@@ -106,16 +106,33 @@ def rezip_file(file):
 
 
 def remove_bff_macros(file, notify):
-    word = client.Dispatch("Word.Application")
-    word.visible = 0
-
+    file_type = file.split(".")[-1].lower()
     input_file = path.abspath(file)
-    w = word.Documents.Open(input_file)
-    output_file = path.abspath(file)
-    w.SaveAs2(output_file, FileFormat=16)  # file format for docx
-    w.Close()
+    output_file = path.abspath(file + ".tmp")
 
-    word.Quit()
+    if file_type == "doc":
+        app = client.Dispatch("Word.Application")
+        app.Visible = False
+        output_type = 12
+        office_file = app.Documents.Open(input_file)
+    elif file_type == "ppt":
+        app = client.Dispatch("PowerPoint.Application")
+        output_type = 24
+        office_file = app.Presentations.Open(input_file, WithWindow=False)
+    elif file_type == "xls":
+        app = client.Dispatch("Excel.Application")
+        app.Visible = False
+        output_type = 51
+        office_file = app.Workbooks.Open(input_file)
+    else:
+        return
+
+    office_file.SaveAs(output_file, output_type)
+    office_file.Close()
+    app.Quit()
+
+    remove(input_file)
+    rename(output_file, input_file + 'x')
 
 
 def validate_file(file):
