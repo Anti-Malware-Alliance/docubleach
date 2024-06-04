@@ -16,14 +16,17 @@ It is part of a suite of programs developed by the AntiMalware Alliance.
 
 Visit https://github.com/Anti-Malware-Alliance for more details about our organisation and projects.
 """
+from sys import platform
 from argparse import ArgumentParser
 from os import rename, path, remove
 from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 
+if platform == "win32":
+    from win32com import client
 
-supported_formats = [
+ooxml_formats = [
     "docx",
     "docm",
     "dotx",
@@ -40,12 +43,18 @@ supported_formats = [
     "xltm",
 ]
 
-macro_folders = {
+ooxml_macro_folders = {
     "do": "word",
     "pp": "ppt",
     "po": "ppt",
     "xl": "xl",
 }
+
+bff_formats = [
+    "doc",
+    #"ppt",
+    #"xls",
+]
 
 FILESIZE_LIMIT = 209715200
 
@@ -60,10 +69,22 @@ def unzip_file(file):
 
 
 def remove_macros(file, notify):
+    file_type = file.split(".")[-1].lower()
+
+    if file_type in ooxml_formats:
+        unzip_file(file)
+        remove_ooxml_macros(file, notify)
+        rezip_file(file)
+
+    if file_type in bff_formats:
+        remove_bff_macros(file, notify)
+
+
+def remove_ooxml_macros(file, notify):
     macros_found = False
     file_type = file.split(".")[-1].lower()
 
-    macro_folder = macro_folders.get(file_type[:2])
+    macro_folder = ooxml_macro_folders.get(file_type[:2])
 
     if path.exists(file + f"_temp/{macro_folder}/vbaProject.bin"):
         remove(file + f"_temp/{macro_folder}/vbaProject.bin")
@@ -84,10 +105,23 @@ def rezip_file(file):
     rmtree(file + "_temp")
 
 
+def remove_bff_macros(file, notify):
+    word = client.Dispatch("Word.Application")
+    word.visible = 0
+
+    input_file = path.abspath(file)
+    w = word.Documents.Open(input_file)
+    output_file = path.abspath(file)
+    w.SaveAs2(output_file, FileFormat=16)  # file format for docx
+    w.Close()
+
+    word.Quit()
+
+
 def validate_file(file):
     filetype = file.split(".")[-1].lower()
 
-    if filetype in supported_formats:
+    if filetype in ooxml_formats or filetype in bff_formats:
         if getsize(file) < FILESIZE_LIMIT:
             return True
         else:
@@ -105,9 +139,7 @@ def main():
     args = parser.parse_args()
 
     if validate_file(args.file):
-        unzip_file(args.file)
         remove_macros(args.file, args.c)
-        rezip_file(args.file)
 
 
 if __name__ == "__main__":

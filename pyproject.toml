@@ -8,6 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pywin32 = {version = "^306", platform = "win32"}
 
 
 [tool.poetry.scripts]
