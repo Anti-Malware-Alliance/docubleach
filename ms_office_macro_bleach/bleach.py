@@ -16,15 +16,13 @@ It is part of a suite of programs developed by the AntiMalware Alliance.
 
 Visit https://github.com/Anti-Malware-Alliance for more details about our organisation and projects.
 """
-from sys import platform
 from argparse import ArgumentParser
 from os import rename, path, remove
 from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
+from olefile import OleFileIO
 
-if platform == "win32":
-    from win32com import client
 
 ooxml_formats = [
     "docx",
@@ -80,6 +78,26 @@ def remove_macros(file, notify):
         remove_bff_macros(file, notify)
 
 
+def remove_bff_macros(file, notify):
+    streams = OleFileIO(file).listdir(streams=True)
+    macro_streams = []
+
+    for stream in streams:
+        if stream[0] == "VBA" or stream[0] == "Macros":
+            macro_streams.append(stream)
+
+    ole = OleFileIO(file, write_mode=True)
+
+    for macro_stream in macro_streams:
+        macro_stream_size = ole.get_size(macro_stream)
+        ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
+
+    ole.close()
+
+    if notify and len(macro_streams) > 0:
+        print("Macros detected and removed.")
+
+
 def remove_ooxml_macros(file, notify):
     macros_found = False
     file_type = file.split(".")[-1].lower()
@@ -94,82 +112,14 @@ def remove_ooxml_macros(file, notify):
         remove(file + f"_temp/{macro_folder}/vbaData.xml")
         macros_found = True
 
-    if notify:
-        if macros_found:
-            print("Macros detected and removed.")
+    if notify and macros_found:
+        print("Macros detected and removed.")
 
 
 def rezip_file(file):
     make_archive(file, "zip", file + "_temp")
     rename(file + ".zip", file)
     rmtree(file + "_temp")
-
-
-def convert_to_ooxml(file):
-    file_type = file.split(".")[-1].lower()
-    input_file = path.abspath(file)
-    output_file = path.abspath("temp_" + file + "x")
-
-    if file_type == "doc":
-        app = client.Dispatch("Word.Application")
-        app.Visible = False
-        output_type = 12
-        office_file = app.Documents.Open(input_file)
-    elif file_type == "ppt":
-        app = client.Dispatch("PowerPoint.Application")
-        output_type = 24
-        office_file = app.Presentations.Open(input_file, WithWindow=False)
-    elif file_type == "xls":
-        app = client.Dispatch("Excel.Application")
-        app.Visible = False
-        output_type = 51
-        office_file = app.Workbooks.Open(input_file)
-    else:
-        return
-
-    office_file.SaveAs(output_file, output_type)
-    office_file.Close()
-    app.Quit()
-
-
-def convert_to_bff(file):
-    file_type = file.split(".")[-1].lower()
-    input_file = path.abspath("temp_" + file + "x")
-    output_file = path.abspath("temp_" + file)
-
-    if file_type == "doc":
-        app = client.Dispatch("Word.Application")
-        app.Visible = False
-        output_type = 0
-        office_file = app.Documents.Open(input_file)
-    elif file_type == "ppt":
-        app = client.Dispatch("PowerPoint.Application")
-        output_type = 1
-        office_file = app.Presentations.Open(input_file, WithWindow=False)
-    elif file_type == "xls":
-        app = client.Dispatch("Excel.Application")
-        app.Visible = False
-        output_type = 56
-        office_file = app.Workbooks.Open(input_file)
-    else:
-        return
-
-    office_file.SaveAs(output_file, output_type)
-    office_file.Close()
-    app.Quit()
-
-    remove(input_file)
-    remove(file)
-    rename(output_file, file)
-
-
-def remove_bff_macros(file, notify):
-    convert_to_ooxml(file)
-    remove_ooxml_macros("temp_" + file + "x", notify)
-    convert_to_bff(file)
-
-    if notify:
-        print("Binary File Format macro sectors wiped.")
 
 
 def validate_file(file):
