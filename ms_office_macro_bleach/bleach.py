@@ -22,7 +22,8 @@ from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
-
+from oletools import olevba
+from oletools.thirdparty import oledump
 
 ooxml_formats = [
     "docx",
@@ -79,22 +80,32 @@ def remove_macros(file, notify):
 
 
 def remove_bff_macros(file, notify):
-    streams = OleFileIO(file).listdir(streams=True)
-    macro_streams = []
+    file_type = file.split(".")[-1].lower()
+    macros_found = False
 
-    for stream in streams:
-        if stream[0] == "VBA" or stream[0] == "Macros":
-            macro_streams.append(stream)
+    if file_type == "doc" or file_type == "xls":
+        streams = OleFileIO(file).listdir(streams=True)
+        print(streams)
+        macro_streams = []
 
-    ole = OleFileIO(file, write_mode=True)
+        for stream in streams:
+            if stream[0] == "VBA" or stream[0] == "Macros" or stream[0] == "_VBA_PROJECT_CUR":
+                macro_streams.append(stream)
 
-    for macro_stream in macro_streams:
-        macro_stream_size = ole.get_size(macro_stream)
-        ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
+        ole = OleFileIO(file, write_mode=True)
 
-    ole.close()
+        for macro_stream in macro_streams:
+            macro_stream_size = ole.get_size(macro_stream)
+            ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
+        ole.close()
 
-    if notify and len(macro_streams) > 0:
+        if len(macro_streams) > 0:
+            macros_found = True
+
+    if file_type == "ppt":
+        print("GET THIS WORKING")
+
+    if notify and macros_found:
         print("Macros detected and removed.")
 
 
