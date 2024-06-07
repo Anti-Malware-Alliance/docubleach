@@ -108,8 +108,7 @@ def remove_bff_macros(file, notify):
 
     if file_type == "ppt":
         streams = OleFileIO(file).listdir(streams=True)
-        print(streams)
-        print("GET THIS WORKING")
+        # ppt logic here
 
     if notify and macros_found:
         print("Macros detected and removed.")
