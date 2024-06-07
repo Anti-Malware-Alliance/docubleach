@@ -22,8 +22,7 @@ from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
-from oletools import olevba
-from oletools.thirdparty import oledump
+
 
 ooxml_formats = [
     "docx",
@@ -53,6 +52,12 @@ bff_formats = [
     "doc",
     "ppt",
     "xls",
+]
+
+bff_macro_folders = [
+    "VBA",
+    "Macros",
+    "_VBA_PROJECT_CUR",
 ]
 
 FILESIZE_LIMIT = 209715200
@@ -89,7 +94,7 @@ def remove_bff_macros(file, notify):
         macro_streams = []
 
         for stream in streams:
-            if stream[0] == "VBA" or stream[0] == "Macros" or stream[0] == "_VBA_PROJECT_CUR":
+            if stream[0] in bff_macro_folders:
                 macro_streams.append(stream)
 
         ole = OleFileIO(file, write_mode=True)
