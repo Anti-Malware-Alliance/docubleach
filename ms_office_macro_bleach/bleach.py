@@ -90,7 +90,6 @@ def remove_bff_macros(file, notify):
 
     if file_type == "doc" or file_type == "xls":
         streams = OleFileIO(file).listdir(streams=True)
-        print(streams)
         macro_streams = []
 
         for stream in streams:
