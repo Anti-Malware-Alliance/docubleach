@@ -21,9 +21,10 @@ from os import rename, path, remove
 from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
+from olefile import OleFileIO
 
 
-supported_formats = [
+ooxml_formats = [
     "docx",
     "docm",
     "dotx",
@@ -40,12 +41,24 @@ supported_formats = [
     "xltm",
 ]
 
-macro_folders = {
+ooxml_macro_folders = {
     "do": "word",
     "pp": "ppt",
     "po": "ppt",
     "xl": "xl",
 }
+
+bff_formats = [
+    "doc",
+    #"ppt",
+    "xls",
+]
+
+bff_macro_folders = [
+    "VBA",
+    "Macros",
+    "_VBA_PROJECT_CUR",
+]
 
 FILESIZE_LIMIT = 209715200
 
@@ -60,10 +73,52 @@ def unzip_file(file):
 
 
 def remove_macros(file, notify):
+    file_type = file.split(".")[-1].lower()
+
+    if file_type in ooxml_formats:
+        unzip_file(file)
+        remove_ooxml_macros(file, notify)
+        rezip_file(file)
+
+    if file_type in bff_formats:
+        remove_bff_macros(file, notify)
+
+
+def remove_bff_macros(file, notify):
+    file_type = file.split(".")[-1].lower()
+    macros_found = False
+
+    if file_type == "doc" or file_type == "xls":
+        streams = OleFileIO(file).listdir(streams=True)
+        macro_streams = []
+
+        for stream in streams:
+            if stream[0] in bff_macro_folders:
+                macro_streams.append(stream)
+
+        ole = OleFileIO(file, write_mode=True)
+
+        for macro_stream in macro_streams:
+            macro_stream_size = ole.get_size(macro_stream)
+            ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
+        ole.close()
+
+        if len(macro_streams) > 0:
+            macros_found = True
+
+    if file_type == "ppt":
+        streams = OleFileIO(file).listdir(streams=True)
+        # ppt logic here
+
+    if notify and macros_found:
+        print("Macros detected and removed.")
+
+
+def remove_ooxml_macros(file, notify):
     macros_found = False
     file_type = file.split(".")[-1].lower()
 
-    macro_folder = macro_folders.get(file_type[:2])
+    macro_folder = ooxml_macro_folders.get(file_type[:2])
 
     if path.exists(file + f"_temp/{macro_folder}/vbaProject.bin"):
         remove(file + f"_temp/{macro_folder}/vbaProject.bin")
@@ -73,9 +128,8 @@ def remove_macros(file, notify):
         remove(file + f"_temp/{macro_folder}/vbaData.xml")
         macros_found = True
 
-    if notify:
-        if macros_found:
-            print("Macros detected and removed.")
+    if notify and macros_found:
+        print("Macros detected and removed.")
 
 
 def rezip_file(file):
@@ -87,7 +141,7 @@ def rezip_file(file):
 def validate_file(file):
     filetype = file.split(".")[-1].lower()
 
-    if filetype in supported_formats:
+    if filetype in ooxml_formats or filetype in bff_formats:
         if getsize(file) < FILESIZE_LIMIT:
             return True
         else:
@@ -105,9 +159,7 @@ def main():
     args = parser.parse_args()
 
     if validate_file(args.file):
-        unzip_file(args.file)
         remove_macros(args.file, args.c)
-        rezip_file(args.file)
 
 
 if __name__ == "__main__":
