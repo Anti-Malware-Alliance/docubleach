@@ -50,7 +50,7 @@ ooxml_macro_folders = {
 
 bff_formats = [
     "doc",
-    "ppt",
+    #"ppt",
     "xls",
 ]
 
@@ -108,6 +108,8 @@ def remove_bff_macros(file, notify):
             macros_found = True
 
     if file_type == "ppt":
+        streams = OleFileIO(file).listdir(streams=True)
+        print(streams)
         print("GET THIS WORKING")
 
     if notify and macros_found:
