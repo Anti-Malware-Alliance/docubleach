@@ -1,7 +1,7 @@
 ![MS Office Macro Bleach](docs/images/bleach.jpg)
 
 
-# MS Office Macro Bleach
+# MacroBleach
 
 A command-line tool designed to detect and purge any and all macros and dynamic content from commonly used office document formats (including MS Office Files, PDFs, etc.).
 
