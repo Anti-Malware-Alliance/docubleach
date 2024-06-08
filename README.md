@@ -5,7 +5,33 @@
 
 A command-line tool designed to detect and purge any and all macros and dynamic content from commonly used office document formats (including MS Office Files, PDFs, etc.).
 
-It currently supports '.docm' and'.docx' files and will continue to expand its file support with every released version. The next file types to be supported will be '.pdf'' and '.doc'.
+## Supported formats
+
+### Word
+- .docx: Word Document
+- .doc: Word Document (1997 - 2007)
+- .docm: Word Document with Macros
+- .dotx: Word Template
+- .dotm: Word Template with Macros
+
+### PowerPoint
+- .pptx: PowerPoint Presentation
+- .pptm: PowerPoint Presentation with Macros
+- .potx: PowerPoint Template
+- .potm: PowerPoint Template with Macros
+- .ppsx: PowerPoint Show
+- .ppsm: PowerPoint Show with Macros
+
+### Excel
+- .xlsx: Excel Spreadsheet
+- .xls: Excel Spreadsheet (1997 - 2007)
+- .xlsm: Excel Spreadsheet with Macros
+- .xltx: Excel Template
+- .xltm: Excel Template with Macros
+
+## Planned formats
+- .ppt: PowerPoint Presentation (1997 - 2007)
+- .pdf: Portable Document File
 
 
 ## Problem
@@ -21,4 +47,13 @@ This Python tool aims to detect and remove any of this potentially malicious con
 
 A command-line program written in modern Python (3.10+) that is capable of locating and removing macros and dynamic content from a variety of files.
 
-It should support all the common Office Open XML formats (e.g. '.pptx', .docx', '.xlsx', etc.) as well as the 'legacy' MS binary file formats, like '.doc' and '.ppt'.
+It should support all the common Office Open XML formats, 'legacy', MS binary files, and PDFs.
+
+
+## Usage
+
+This package has not yet been published. It can be used, however, by cloning the repo, opening the command prompt in it, and running the following command:
+
+```poetry run bleach <PATH_TO_FILE>```
+
+The optional '-c' flag may be appended to the command to enable notification if any macros are detected.
