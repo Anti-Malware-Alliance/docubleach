@@ -47,7 +47,7 @@ This Python tool aims to detect and remove any of this potentially malicious con
 
 A command-line program written in modern Python (3.10+) that is capable of locating and removing macros and dynamic content from a variety of files.
 
-It should support all the common Office Open XML formats, 'legacy', MS binary files, and PDFs.
+It should support all the common Office Open XML formats, 'legacy' MS binary files, and PDFs.
 
 
 ## Usage
