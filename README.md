@@ -1,7 +1,7 @@
-![MS Office Macro Bleach](docs/images/bleach.jpg)
+![DocuBleach](docs/images/bleach.jpg)
 
 
-# MacroBleach
+# DocuBleach
 
 A command-line tool designed to detect and purge any and all macros and dynamic content from commonly used office document formats (including MS Office Files, PDFs, etc.).
 
@@ -54,6 +54,6 @@ It should support all the common Office Open XML formats, 'legacy' MS binary fil
 
 This package has not yet been published. It can be used, however, by cloning the repo, opening the command prompt in it, and running the following command:
 
-```poetry run bleach <PATH_TO_FILE>```
+```poetry run docubleach <PATH_TO_FILE>```
 
 The optional '-c' flag may be appended to the command to enable notification if any macros are detected.

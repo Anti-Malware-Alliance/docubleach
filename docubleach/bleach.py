@@ -1,4 +1,4 @@
-"""This module removes any and all macros/dynamic content from MS Office files.
+"""This module is designed to purge any and all macros and dynamic content from commonly used office formats.
 
 VBA and OLE content in MS Office files can, and have sometimes been made to, act as vehicles for malware delivery.
 
@@ -7,10 +7,6 @@ Microsoft has previously attempted to protect users from macros by disabling the
 However, anybody is able to enable macros in an MS Office file before sending them on to a potential victim.
 
 This module enables users to simply and safely remove any and all macros/dynamic content from MS Office files.
-
-It converts the given file into a '.zip' archive, unzips it, and deletes the files containing macro data.
-
-It then re-zips the unzipped archive and reverts it to its original file format.
 
 It is part of a suite of programs developed by the AntiMalware Alliance.
 
