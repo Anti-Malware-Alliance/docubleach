@@ -1,16 +1,21 @@
 """This module is designed to purge any and all macros and dynamic content from commonly used office formats.
 
-VBA and OLE content in MS Office files can, and have sometimes been made to, act as vehicles for malware delivery.
+VBA and OLE content in MS Office files can, and have sometimes been made to,
+act as vehicles for malware delivery.
 
-Microsoft has previously attempted to protect users from macros by disabling them by default.
+Microsoft has previously attempted to protect users from macros by disabling
+them by default.
 
-However, anybody is able to enable macros in an MS Office file before sending them on to a potential victim.
+However, anybody is able to enable macros in an MS Office file before sending
+them on to a potential victim.
 
-This module enables users to simply and safely remove any and all macros/dynamic content from MS Office files.
+This module enables users to simply and safely remove any and all
+macros/dynamic content from MS Office files.
 
 It is part of a suite of programs developed by the AntiMalware Alliance.
 
-Visit https://github.com/Anti-Malware-Alliance for more details about our organisation and projects.
+Visit https://github.com/Anti-Malware-Alliance for more details
+about our organisation and projects.
 """
 from argparse import ArgumentParser
 from os import rename, path, remove
@@ -18,7 +23,6 @@ from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
-
 
 ooxml_formats = [
     "docx",
@@ -46,7 +50,6 @@ ooxml_macro_folders = {
 
 bff_formats = [
     "doc",
-    #"ppt",
     "xls",
 ]
 
@@ -151,7 +154,8 @@ def validate_file(file):
 def main():
     parser = ArgumentParser()
     parser.add_argument("file", help="file to be bleached")
-    parser.add_argument("-c", help="notify if macros or potentially dangerous content is found", action="store_true")
+    parser.add_argument("-c", help="notify if macros or potentially dangerous "
+                                   "content is found", action="store_true")
     args = parser.parse_args()
 
     if validate_file(args.file):

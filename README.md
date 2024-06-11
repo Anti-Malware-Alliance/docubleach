@@ -5,6 +5,8 @@
 
 A command-line tool designed to detect and purge any and all macros and dynamic content from commonly used office document formats (including MS Office Files, PDFs, etc.).
 
+[![Super-Linter](https://github.com/Anti-Malware-Alliance/ms-office-macro-bleach/actions/workflows/pre-commit-actions.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
 ## Supported formats
 
 ### Word
