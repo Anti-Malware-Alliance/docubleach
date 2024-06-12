@@ -19,7 +19,7 @@ from subprocess import check_output
 from os import remove, rename
 from shutil import copyfile
 
-program_dir = "../ms_office_macro_bleach/"
+program_dir = "../docubleach/"
 
 
 def test_valid_file_with_macros():
