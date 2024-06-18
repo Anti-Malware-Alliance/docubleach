@@ -6,6 +6,7 @@ authors = ["Patterbear"]
 license = "MIT"
 readme = "README.md"
 
+
 [tool.poetry.dependencies]
 python = "^3.11"
 olefile = "^0.47"
@@ -15,9 +16,18 @@ olefile = "^0.47"
 docubleach = "docubleach.bleach:main"
 
 
+[tool.poetry.group.test]
+optional = true
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.2"
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
 
 [tool.flake8]
 max-line-length = 95
