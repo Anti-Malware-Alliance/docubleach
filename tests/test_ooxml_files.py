@@ -13,139 +13,140 @@ from os import remove, rename
 from shutil import copyfile
 
 
-program_dir = "../docubleach/"
+prog_dir = "docubleach/"
+test_dir = "tests/test_files/"
 
 
 def test_word_document():
-    output = check_output(f"python {program_dir}bleach.py test_files/word_document.docx -c", encoding='utf-8')
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}word_document.docx -c", encoding='utf-8')
 
     assert output == ""
 
 
 def test_word_document_with_macros():
-    copyfile("test_files/word_document_with_macros.docm", "test_files/word_document_with_macros.docm.bak")
+    copyfile(f"{test_dir}word_document_with_macros.docm", f"{test_dir}word_document_with_macros.docm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/word_document_with_macros.docm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}word_document_with_macros.docm -c",
                           encoding='utf-8')
 
-    remove("test_files/word_document_with_macros.docm")
-    rename("test_files/word_document_with_macros.docm.bak", "test_files/word_document_with_macros.docm")
+    remove(f"{test_dir}word_document_with_macros.docm")
+    rename(f"{test_dir}word_document_with_macros.docm.bak", f"{test_dir}word_document_with_macros.docm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_word_template():
-    output = check_output(f"python {program_dir}bleach.py test_files/word_template.dotx -c", encoding='utf-8')
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}word_template.dotx -c", encoding='utf-8')
 
     assert output == ""
 
 
 def test_word_template_with_macros():
-    copyfile("test_files/word_template_with_macros.dotm", "test_files/word_template_with_macros.dotm.bak")
+    copyfile(f"{test_dir}word_template_with_macros.dotm", f"{test_dir}word_template_with_macros.dotm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/word_template_with_macros.dotm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}word_template_with_macros.dotm -c",
                           encoding='utf-8')
 
-    remove("test_files/word_template_with_macros.dotm")
-    rename("test_files/word_template_with_macros.dotm.bak", "test_files/word_template_with_macros.dotm")
+    remove(f"{test_dir}word_template_with_macros.dotm")
+    rename(f"{test_dir}word_template_with_macros.dotm.bak", f"{test_dir}word_template_with_macros.dotm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_powerpoint_presentation():
-    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_presentation.pptx -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}powerpoint_presentation.pptx -c",
                           encoding='utf-8')
 
     assert output == ""
 
 
 def test_powerpoint_presentation_with_macros():
-    copyfile("test_files/powerpoint_presentation_with_macros.pptm",
-             "test_files/powerpoint_presentation_with_macros.pptm.bak")
+    copyfile(f"{test_dir}powerpoint_presentation_with_macros.pptm",
+             f"{test_dir}powerpoint_presentation_with_macros.pptm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_presentation_with_macros.pptm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}powerpoint_presentation_with_macros.pptm -c",
                           encoding='utf-8')
 
-    remove("test_files/powerpoint_presentation_with_macros.pptm")
-    rename("test_files/powerpoint_presentation_with_macros.pptm.bak",
-           "test_files/powerpoint_presentation_with_macros.pptm")
+    remove(f"{test_dir}powerpoint_presentation_with_macros.pptm")
+    rename(f"{test_dir}powerpoint_presentation_with_macros.pptm.bak",
+           f"{test_dir}powerpoint_presentation_with_macros.pptm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_powerpoint_template():
-    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_template.potx -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}powerpoint_template.potx -c",
                           encoding='utf-8')
 
     assert output == ""
 
 
 def test_powerpoint_template_with_macros():
-    copyfile("test_files/powerpoint_template_with_macros.potm",
-             "test_files/powerpoint_template_with_macros.potm.bak")
+    copyfile(f"{test_dir}powerpoint_template_with_macros.potm",
+             f"{test_dir}powerpoint_template_with_macros.potm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_template_with_macros.potm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}powerpoint_template_with_macros.potm -c",
                           encoding='utf-8')
 
-    remove("test_files/powerpoint_template_with_macros.potm")
-    rename("test_files/powerpoint_template_with_macros.potm.bak",
-           "test_files/powerpoint_template_with_macros.potm")
+    remove(f"{test_dir}powerpoint_template_with_macros.potm")
+    rename(f"{test_dir}powerpoint_template_with_macros.potm.bak",
+           f"{test_dir}powerpoint_template_with_macros.potm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_powerpoint_show():
-    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_show.ppsx -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}powerpoint_show.ppsx -c",
                           encoding='utf-8')
 
     assert output == ""
 
 
 def test_powerpoint_show_with_macros():
-    copyfile("test_files/powerpoint_show_with_macros.ppsm", "test_files/powerpoint_show_with_macros.ppsm.bak")
+    copyfile(f"{test_dir}powerpoint_show_with_macros.ppsm", f"{test_dir}powerpoint_show_with_macros.ppsm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/powerpoint_show_with_macros.ppsm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}powerpoint_show_with_macros.ppsm -c",
                           encoding='utf-8')
 
-    remove("test_files/powerpoint_show_with_macros.ppsm")
-    rename("test_files/powerpoint_show_with_macros.ppsm.bak", "test_files/powerpoint_show_with_macros.ppsm")
+    remove(f"{test_dir}powerpoint_show_with_macros.ppsm")
+    rename(f"{test_dir}powerpoint_show_with_macros.ppsm.bak", f"{test_dir}powerpoint_show_with_macros.ppsm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_excel_spreadsheet():
-    output = check_output(f"python {program_dir}bleach.py test_files/excel_spreadsheet.xlsx -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}excel_spreadsheet.xlsx -c",
                           encoding='utf-8')
 
     assert output == ""
 
 
 def test_excel_spreadsheet_with_macros():
-    copyfile("test_files/excel_spreadsheet_with_macros.xlsm",
-             "test_files/excel_spreadsheet_with_macros.xlsm.bak")
+    copyfile(f"{test_dir}excel_spreadsheet_with_macros.xlsm",
+             f"{test_dir}excel_spreadsheet_with_macros.xlsm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/excel_spreadsheet_with_macros.xlsm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}excel_spreadsheet_with_macros.xlsm -c",
                           encoding='utf-8')
 
-    remove("test_files/excel_spreadsheet_with_macros.xlsm")
-    rename("test_files/excel_spreadsheet_with_macros.xlsm.bak", "test_files/excel_spreadsheet_with_macros.xlsm")
+    remove(f"{test_dir}excel_spreadsheet_with_macros.xlsm")
+    rename(f"{test_dir}excel_spreadsheet_with_macros.xlsm.bak", f"{test_dir}excel_spreadsheet_with_macros.xlsm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_excel_template():
-    output = check_output(f"python {program_dir}bleach.py test_files/excel_template.xltx -c", encoding='utf-8')
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}excel_template.xltx -c", encoding='utf-8')
 
     assert output == ""
 
 
 def test_excel_template_with_macros():
-    copyfile("test_files/excel_template_with_macros.xltm", "test_files/excel_template_with_macros.xltm.bak")
+    copyfile(f"{test_dir}excel_template_with_macros.xltm", f"{test_dir}excel_template_with_macros.xltm.bak")
 
-    output = check_output(f"python {program_dir}bleach.py test_files/excel_template_with_macros.xltm -c",
+    output = check_output(f"python {prog_dir}bleach.py {test_dir}excel_template_with_macros.xltm -c",
                           encoding='utf-8')
 
-    remove("test_files/excel_template_with_macros.xltm")
-    rename("test_files/excel_template_with_macros.xltm.bak", "test_files/excel_template_with_macros.xltm")
+    remove(f"{test_dir}excel_template_with_macros.xltm")
+    rename(f"{test_dir}excel_template_with_macros.xltm.bak", f"{test_dir}excel_template_with_macros.xltm")
 
     assert output == "Macros detected and removed.\n"

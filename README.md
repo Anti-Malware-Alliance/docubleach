@@ -54,8 +54,9 @@ It should support all the common Office Open XML formats, 'legacy' MS binary fil
 
 ## Usage
 
-This package has not yet been published. It can be used, however, by cloning the repo, opening the command prompt in it, and running the following command:
+This package has not yet been published. It can be used, however, by cloning the repo, opening the command prompt in it, and running the following commands:
 
-```poetry run docubleach <PATH_TO_FILE>```
+1. ```poetry install```
+2. ```poetry run docubleach <PATH_TO_FILE>```
 
-The optional '-c' flag may be appended to the command to enable notification if any macros are detected.
+The optional '-c' flag may be appended to the final command to enable notification if any macros are detected.
