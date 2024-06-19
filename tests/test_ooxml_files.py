@@ -10,11 +10,12 @@ All tests are written for and conducted using pytest.
 """
 from subprocess import check_output
 from os import remove, rename, listdir
+from os.path import abspath
 from shutil import copyfile
 
 
-prog_dir = "docubleach/"
-test_dir = "tests/test_files/"
+prog_dir = abspath("./docubleach/") + "/"
+test_dir = abspath("./tests/test_files/") + "/"
 
 
 def setup_module():
