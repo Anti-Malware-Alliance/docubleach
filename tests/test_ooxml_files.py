@@ -16,7 +16,7 @@ from shutil import copyfile
 prog_dir = "docubleach/"
 test_dir = "tests/test_files/"
 
-"""
+
 def setup_module():
     for file in listdir(test_dir):
         copyfile(f"{test_dir}{file}", f"{test_dir}{file}.bak")
@@ -28,7 +28,7 @@ def teardown_module():
             remove(f"{test_dir}{file}")
         else:
             rename(f"{test_dir}{file}", f"{test_dir}{file}"[:-4])
-"""
+
 
 def test_word_document():
     output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document.docx", "-c"], encoding='utf-8')
