@@ -13,8 +13,8 @@ from os import remove, rename, listdir
 from shutil import copyfile
 
 
-prog_dir = "docubleach/"
-test_dir = "tests/test_files/"
+prog_dir = "docubleach\\"
+test_dir = "tests\\test_files\\"
 
 
 def setup_module():
