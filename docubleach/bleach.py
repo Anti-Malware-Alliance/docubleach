@@ -19,7 +19,7 @@ about our organisation and projects.
 """
 from argparse import ArgumentParser
 from os import rename, path, remove
-from os.path import getsize
+from os.path import getsize, abspath
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
@@ -158,8 +158,10 @@ def main():
                                    "content is found", action="store_true")
     args = parser.parse_args()
 
-    if validate_file(args.file):
-        remove_macros(args.file, args.c)
+    file = abspath(args.file)
+
+    if validate_file(file):
+        remove_macros(file, args.c)
 
 
 if __name__ == "__main__":
