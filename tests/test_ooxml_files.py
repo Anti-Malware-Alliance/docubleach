@@ -9,11 +9,10 @@ Valid files containing macros are restored to their original form after testing 
 All tests are written for and conducted using pytest.
 """
 from subprocess import check_output
-from os import remove, rename, listdir, getcwd
-from os.path import abspath
+from os import remove, rename, listdir
 from shutil import copyfile
 
-working_dir = getcwd()
+
 prog_dir = "docubleach/"
 test_dir = "tests/test_files/"
 
@@ -31,10 +30,15 @@ def teardown_module():
             rename(f"{test_dir}{file}", f"{test_dir}{file}"[:-4])
 
 
-def test_word_document():
-    file_path = abspath(f"{test_dir}word_document.docx")
+def test_word_template_with_macros():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_template_with_macros.dotm", "-c"],
+                          encoding='utf-8')
 
-    output = check_output(["python", f"{prog_dir}bleach.py", file_path, "-c"], encoding='utf-8')
+    assert output == "Macros detected and removed.\n"
+
+
+def test_word_document():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document.docx", "-c"], encoding='utf-8')
 
     assert output == ""
 
@@ -50,13 +54,6 @@ def test_word_template():
     output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_template.dotx", "-c"], encoding='utf-8')
 
     assert output == ""
-
-
-def test_word_template_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_template_with_macros.dotm", "-c"],
-                          encoding='utf-8')
-
-    assert output == "Macros detected and removed.\n"
 
 
 def test_powerpoint_presentation():
