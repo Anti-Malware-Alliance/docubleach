@@ -44,6 +44,13 @@ def test_valid_file_with_macros():
     assert output == ""
 
 
+def test_word_document_with_macros():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document_with_macros.docm", "-c"],
+                          encoding='utf-8')
+
+    assert output == "Macros detected and removed.\n"
+
+
 def test_valid_file_with_macros_with_check():
     output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_with_macros_check.docm", "-c"],
                           encoding='utf-8')
