@@ -9,25 +9,10 @@ Valid files containing macros are restored to their original form after testing 
 All tests are written for and conducted using pytest.
 """
 from subprocess import check_output
-from os import remove, rename, listdir
-from shutil import copyfile
 
 
 prog_dir = "docubleach/"
 test_dir = "tests/test_files/"
-
-
-def setup_module():
-    for file in listdir(test_dir):
-        copyfile(f"{test_dir}{file}", f"{test_dir}{file}.bak")
-
-
-def teardown_module():
-    for file in listdir(test_dir):
-        if file[-4:] != '.bak':
-            remove(f"{test_dir}{file}")
-        else:
-            rename(f"{test_dir}{file}", f"{test_dir}{file}"[:-4])
 
 
 def test_word_document():

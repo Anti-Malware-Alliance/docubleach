@@ -16,8 +16,7 @@ All tests are written for and conducted using pytest.
 """
 
 from subprocess import check_output
-from os import remove, rename, listdir
-from shutil import copyfile
+from os import remove
 
 
 prog_dir = "docubleach/"
