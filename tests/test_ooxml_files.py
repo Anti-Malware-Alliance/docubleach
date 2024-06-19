@@ -9,9 +9,10 @@ Valid files containing macros are restored to their original form after testing 
 All tests are written for and conducted using pytest.
 """
 from subprocess import check_output
-from os import remove, rename, listdir, getcwd
+from os import remove, rename, listdir, getcwd, chdir
 from os.path import abspath
 from shutil import copyfile
+import webbrowser
 
 
 prog_dir = abspath("./docubleach/") + "/"
@@ -33,9 +34,11 @@ def teardown_module():
             rename(f"{test_dir}{file}", f"{test_dir}{file}"[:-4])
 
 
-def test_word_document():
-    assert getcwd() == cwd
+def setup_function():
+    chdir(cwd)
 
+
+def test_word_document():
     output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document.docx", "-c"], encoding='utf-8')
 
     assert output == ""
