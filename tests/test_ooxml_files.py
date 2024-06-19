@@ -8,23 +8,17 @@ Valid files containing macros are restored to their original form after testing 
 
 All tests are written for and conducted using pytest.
 """
-import os
 from subprocess import check_output
-from os import remove, rename, listdir, getcwd, chdir
+from os import remove, rename, listdir
 from os.path import abspath
 from shutil import copyfile
-import webbrowser
 
 
-prog_dir = abspath("./docubleach/") + "/"
-test_dir = abspath("./tests/test_files/") + "/"
-
-cwd = ""
+prog_dir = abspath("./docubleach") + "/"
+test_dir = abspath("./tests/test_files") + "/"
 
 
 def setup_module():
-    global cwd
-    cwd = os.getcwd()
     for file in listdir(test_dir):
         copyfile(f"{test_dir}{file}", f"{test_dir}{file}.bak")
 
@@ -35,14 +29,6 @@ def teardown_module():
             remove(f"{test_dir}{file}")
         else:
             rename(f"{test_dir}{file}", f"{test_dir}{file}"[:-4])
-
-
-def setup_function():
-    chdir(cwd)
-
-
-def teardown_function():
-    chdir(cwd)
 
 
 def test_word_document():
