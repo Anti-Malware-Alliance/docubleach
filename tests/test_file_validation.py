@@ -38,7 +38,8 @@ def teardown_module():
 
 
 def test_valid_file_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_with_macros.docm"], encoding='utf-8')
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_with_macros.docm"],
+                          encoding='utf-8')
 
     assert output == ""
 
@@ -51,13 +52,14 @@ def test_valid_file_with_macros_with_check():
 
 
 def test_valid_file_without_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_without_macros.docx"], encoding='utf-8')
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_without_macros.docx"],
+                          encoding='utf-8')
 
     assert output == ""
 
 
 def test_invalid_file_type():
-    output = check_output(f"python {prog_dir}bleach.py {test_dir}invalid_file_type.txt", encoding='utf-8')
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}invalid_file_type.txt"], encoding='utf-8')
 
     assert output == "Unsupported file format.\n"
 
