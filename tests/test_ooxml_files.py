@@ -8,6 +8,7 @@ Valid files containing macros are restored to their original form after testing 
 
 All tests are written for and conducted using pytest.
 """
+import os
 from subprocess import check_output
 from os import remove, rename, listdir, getcwd, chdir
 from os.path import abspath
@@ -18,10 +19,12 @@ import webbrowser
 prog_dir = abspath("./docubleach/") + "/"
 test_dir = abspath("./tests/test_files/") + "/"
 
-cwd = getcwd()
+cwd = ""
 
 
 def setup_module():
+    global cwd
+    cwd = os.getcwd()
     for file in listdir(test_dir):
         copyfile(f"{test_dir}{file}", f"{test_dir}{file}.bak")
 
