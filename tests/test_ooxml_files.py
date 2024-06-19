@@ -24,9 +24,8 @@ def setup_module():
 
 def teardown_module():
     for file in listdir(test_dir):
-        if file[-4:] != '.bak':
-            remove(f"{test_dir}{file}")
-        else:
+        if file[-4:] == '.bak':
+            remove(f"{test_dir}{file}"[:-4])
             rename(f"{test_dir}{file}", f"{test_dir}{file}"[:-4])
 
 
