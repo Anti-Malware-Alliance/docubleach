@@ -25,7 +25,7 @@ pytest = "^8.2.2"
 
 
 [tool.pytest.ini_options]
-pythonpath = ["./docubleach"]
+pythonpath = ["."]
 
 
 [build-system]
