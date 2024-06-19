@@ -141,14 +141,11 @@ def validate_file(file):
     filetype = file.split(".")[-1].lower()
 
     if filetype in ooxml_formats or filetype in bff_formats:
-       """
-       if getsize(file) < FILESIZE_LIMIT:
+        if getsize(file) < FILESIZE_LIMIT:
             return True
         else:
             print("File exceeds size limit.")
             return False
-        """
-       return True
     else:
         print("Unsupported file format.")
         return False
