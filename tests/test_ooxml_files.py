@@ -38,6 +38,10 @@ def setup_function():
     chdir(cwd)
 
 
+def teardown_function():
+    chdir(cwd)
+
+
 def test_word_document():
     output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document.docx", "-c"], encoding='utf-8')
 
