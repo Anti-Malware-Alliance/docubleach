@@ -18,8 +18,7 @@ Visit https://github.com/Anti-Malware-Alliance for more details
 about our organisation and projects.
 """
 from argparse import ArgumentParser
-from os import rename, path, remove
-from os.path import getsize
+from os import rename, path, remove, stat
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
@@ -141,7 +140,7 @@ def validate_file(file):
     filetype = file.split(".")[-1].lower()
 
     if filetype in ooxml_formats or filetype in bff_formats:
-        if getsize(file) < FILESIZE_LIMIT:
+        if stat(file).st_size < FILESIZE_LIMIT:
             return True
         else:
             print("File exceeds size limit.")
