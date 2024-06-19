@@ -16,44 +16,36 @@ All tests are written for and conducted using pytest.
 """
 
 from subprocess import check_output
-from os import remove, rename
-from shutil import copyfile
+from os import remove
+
 
 prog_dir = "docubleach/"
 test_dir = "tests/test_files/"
 
 
 def test_valid_file_with_macros():
-    copyfile(f"{test_dir}valid_file_with_macros.docm", f"{test_dir}valid_file_with_macros.bak")
-
-    output = check_output(f"python {prog_dir}bleach.py {test_dir}valid_file_with_macros.docm", encoding='utf-8')
-
-    remove(f"{test_dir}valid_file_with_macros.docm")
-    rename(f"{test_dir}valid_file_with_macros.bak", f"{test_dir}valid_file_with_macros.docm")
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_with_macros.docm"],
+                          encoding='utf-8')
 
     assert output == ""
 
 
 def test_valid_file_with_macros_with_check():
-    copyfile(f"{test_dir}valid_file_with_macros_check.docm", f"{test_dir}valid_file_with_macros_check.bak")
-
-    output = check_output(f"python {prog_dir}bleach.py {test_dir}valid_file_with_macros_check.docm -c",
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_with_macros_check.docm", "-c"],
                           encoding='utf-8')
-
-    remove(f"{test_dir}valid_file_with_macros_check.docm")
-    rename(f"{test_dir}valid_file_with_macros_check.bak", f"{test_dir}valid_file_with_macros_check.docm")
 
     assert output == "Macros detected and removed.\n"
 
 
 def test_valid_file_without_macros():
-    output = check_output(f"python {prog_dir}bleach.py {test_dir}valid_file_without_macros.docx", encoding='utf-8')
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}valid_file_without_macros.docx"],
+                          encoding='utf-8')
 
     assert output == ""
 
 
 def test_invalid_file_type():
-    output = check_output(f"python {prog_dir}bleach.py {test_dir}invalid_file_type.txt", encoding='utf-8')
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}invalid_file_type.txt"], encoding='utf-8')
 
     assert output == "Unsupported file format.\n"
 
@@ -64,7 +56,7 @@ def test_invalid_file_size():
     with open(f"{test_dir}invalid_file_size.docx", "wb") as out:
         out.truncate(262144000)
 
-    output = check_output(f"python {prog_dir}bleach.py {test_dir}invalid_file_size.docx", encoding='utf-8')
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}invalid_file_size.docx"], encoding='utf-8')
 
     remove(f"{test_dir}invalid_file_size.docx")
 
