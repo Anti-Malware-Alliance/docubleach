@@ -14,7 +14,7 @@ from shutil import copyfile
 
 
 prog_dir = "docubleach/"
-test_dir = "tests\\test_files/"
+test_dir = "tests/test_files/"
 
 
 def setup_module():
