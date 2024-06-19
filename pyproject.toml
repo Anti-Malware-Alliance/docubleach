@@ -24,10 +24,6 @@ optional = true
 pytest = "^8.2.2"
 
 
-[tool.pytest.ini_options]
-pythonpath = ["."]
-
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
