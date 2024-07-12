@@ -9,8 +9,8 @@ Valid files containing macros are restored to their original form after testing 
 All tests are written for and conducted using pytest.
 """
 from subprocess import check_output
-from shutil import copyfile
 from os import listdir, remove, rename
+from shutil import copyfile
 
 
 prog_dir = "docubleach/"
