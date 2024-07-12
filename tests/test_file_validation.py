@@ -16,11 +16,27 @@ All tests are written for and conducted using pytest.
 """
 
 from subprocess import check_output
-from os import remove
+from os import listdir, remove, rename
+from shutil import copyfile
 
 
 prog_dir = "docubleach/"
 test_dir = "tests/test_files/"
+
+
+def setup_module():
+    for file in listdir(test_dir):
+        copyfile(test_dir + file, test_dir + file + ".bak")
+
+
+def teardown_module():
+    for file in listdir(test_dir):
+        if file.split(".")[-1] != "bak":
+            remove(test_dir + file)
+
+    for file in listdir(test_dir):
+        if file.split(".")[-1] == "bak":
+            rename(test_dir + file, test_dir + file[:-4])
 
 
 def test_valid_file_with_macros():
