@@ -36,7 +36,7 @@ def test_word_document():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_word_document_with_macros():
@@ -44,7 +44,7 @@ def test_word_document_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_word_template():
@@ -52,7 +52,7 @@ def test_word_template():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_word_template_with_macros():
@@ -60,7 +60,7 @@ def test_word_template_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_presentation():
@@ -68,7 +68,7 @@ def test_powerpoint_presentation():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_presentation_with_macros():
@@ -76,7 +76,7 @@ def test_powerpoint_presentation_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_template():
@@ -84,7 +84,7 @@ def test_powerpoint_template():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_template_with_macros():
@@ -92,7 +92,7 @@ def test_powerpoint_template_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_show():
@@ -100,7 +100,7 @@ def test_powerpoint_show():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_show_with_macros():
@@ -108,7 +108,7 @@ def test_powerpoint_show_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_excel_spreadsheet():
@@ -116,7 +116,7 @@ def test_excel_spreadsheet():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_excel_spreadsheet_with_macros():
@@ -124,14 +124,15 @@ def test_excel_spreadsheet_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
+
 
 def test_excel_template():
     test_file = f"{test_dir}excel_template.xltx"
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False
 
 
 def test_excel_template_with_macros():
@@ -139,4 +140,4 @@ def test_excel_template_with_macros():
 
     remove_macros(test_file)
 
-    assert detect_macros(test_file) == False
+    assert detect_macros(test_file) is False

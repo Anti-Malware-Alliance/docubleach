@@ -75,6 +75,7 @@ def unzip_file(file):
 def detect_macros(file):
     return VBA_Parser(file).detect_macros()
 
+
 def remove_macros(file, notify=False):
     file_type = file.split(".")[-1].lower()
 
