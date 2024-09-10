@@ -23,6 +23,7 @@ from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
+from oletools.olevba import VBA_Parser
 
 ooxml_formats = [
     "docx",
@@ -71,7 +72,10 @@ def unzip_file(file):
     remove(file + ".zip")
 
 
-def remove_macros(file, notify):
+def detect_macros(file):
+    return VBA_Parser(file).detect_macros()
+
+def remove_macros(file, notify=False):
     file_type = file.split(".")[-1].lower()
 
     if file_type in ooxml_formats:
