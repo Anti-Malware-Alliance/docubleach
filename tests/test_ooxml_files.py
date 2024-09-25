@@ -1,19 +1,18 @@
 """These tests are designed to test the tool's compatibility with all OOXML file formats.
 
-Each test runs the bleaching function on their file and records the console output.
+Each test runs the 'bleach' on their respective file.
 
-These are then compared against the correct outputs.
+The 'bleached' files are then scanned for macros using the 'detect_macros' function
 
 Valid files containing macros are restored to their original form after testing to ensure test repeatability.
 
 All tests are written for and conducted using pytest.
 """
-from subprocess import check_output
 from os import listdir, remove, rename
 from shutil import copyfile
+from docubleach.bleach import detect_macros, remove_macros
 
 
-prog_dir = "docubleach/"
 test_dir = "tests/test_files/ooxml_files/"
 
 
@@ -33,95 +32,112 @@ def teardown_module():
 
 
 def test_word_document():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document.docx", "-c"], encoding='utf-8')
+    test_file = f"{test_dir}word_document.docx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_word_document_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_document_with_macros.docm", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}word_document_with_macros.docm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_word_template():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_template.dotx", "-c"], encoding='utf-8')
+    test_file = f"{test_dir}word_template.dotx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_word_template_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}word_template_with_macros.dotm", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}word_template_with_macros.dotm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_presentation():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}powerpoint_presentation.pptx", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}powerpoint_presentation.pptx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_presentation_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}powerpoint_presentation_with_macros.pptm",
-                           "-c"], encoding='utf-8')
+    test_file = f"{test_dir}powerpoint_presentation_with_macros.pptm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_template():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}powerpoint_template.potx", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}powerpoint_template.potx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_template_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}powerpoint_template_with_macros.potm", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}powerpoint_template_with_macros.potm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_show():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}powerpoint_show.ppsx", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}powerpoint_show.ppsx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_powerpoint_show_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}powerpoint_show_with_macros.ppsm", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}powerpoint_show_with_macros.ppsm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_excel_spreadsheet():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}excel_spreadsheet.xlsx", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}excel_spreadsheet.xlsx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_excel_spreadsheet_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}excel_spreadsheet_with_macros.xlsm", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}excel_spreadsheet_with_macros.xlsm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_excel_template():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}excel_template.xltx", "-c"], encoding='utf-8')
+    test_file = f"{test_dir}excel_template.xltx"
 
-    assert output == ""
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
 
 
 def test_excel_template_with_macros():
-    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}excel_template_with_macros.xltm", "-c"],
-                          encoding='utf-8')
+    test_file = f"{test_dir}excel_template_with_macros.xltm"
 
-    assert output == "Macros detected and removed.\n"
+    remove_macros(test_file)
+
+    assert detect_macros(test_file) is False
