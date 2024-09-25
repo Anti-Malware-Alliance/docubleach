@@ -13,7 +13,7 @@ from shutil import copyfile
 from docubleach.bleach import detect_macros, remove_macros
 
 
-test_dir = "tests/test_files/"
+test_dir = "tests/test_files/ooxml_files/"
 
 
 def setup_module():
