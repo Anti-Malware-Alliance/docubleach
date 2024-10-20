@@ -73,7 +73,29 @@ def unzip_file(file):
 
 
 def detect_macros(file):
-    return VBA_Parser(file).detect_macros()
+    file_type = file.split(".")[-1].lower()
+
+    if file_type in bff_formats:
+        with OleFileIO(file, write_mode=False) as ole:
+            streams = ole.listdir(streams=True)
+            macro_streams = []
+
+            for stream in streams:
+                if stream[0] in bff_macro_folders:
+                    macro_streams.append(stream)
+
+            # Check each macro stream to see if it's empty (bleached)
+            for macro_stream in macro_streams:
+                macro_stream_size = ole.get_size(macro_stream)
+                stream_contents = ole.openstream(macro_stream).read(macro_stream_size)
+                stream_bytes = bytes(bytearray(stream_contents))
+
+                if stream_bytes != bytes(bytearray(macro_stream_size)):
+                    return True
+
+        return False
+    else:
+        return VBA_Parser(file).detect_macros()
 
 
 def remove_macros(file, notify=False):
@@ -93,19 +115,18 @@ def remove_bff_macros(file, notify):
     macros_found = False
 
     if file_type == "doc" or file_type == "xls":
-        streams = OleFileIO(file).listdir(streams=True)
-        macro_streams = []
+        with OleFileIO(file, write_mode=True) as ole:
+            streams = ole.listdir(streams=True)
+            macro_streams = []
 
-        for stream in streams:
-            if stream[0] in bff_macro_folders:
-                macro_streams.append(stream)
+            for stream in streams:
+                if stream[0] in bff_macro_folders:
+                    macro_streams.append(stream)
 
-        ole = OleFileIO(file, write_mode=True)
-
-        for macro_stream in macro_streams:
-            macro_stream_size = ole.get_size(macro_stream)
-            ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
-        ole.close()
+            # Replace macro stream contents with empty bytes
+            for macro_stream in macro_streams:
+                macro_stream_size = ole.get_size(macro_stream)
+                ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
 
         if len(macro_streams) > 0:
             macros_found = True
