@@ -123,13 +123,15 @@ def remove_bff_macros(file, notify):
                 if stream[0] in bff_macro_folders:
                     macro_streams.append(stream)
 
-            # Replace macro stream contents with empty bytes
             for macro_stream in macro_streams:
                 macro_stream_size = ole.get_size(macro_stream)
-                ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
+                macro_stream_contents = ole.openstream(macro_stream).read(macro_stream_size)
 
-        if len(macro_streams) > 0:
-            macros_found = True
+                # Check each macro stream to see if it's already empty (bleached)
+                if macro_stream_contents != bytes(bytearray(macro_stream_size)):
+                    # Replace macro stream contents with empty bytes
+                    ole.write_stream(macro_stream, bytes(bytearray(macro_stream_size)))
+                    macros_found = True
 
     if file_type == "ppt":
         streams = OleFileIO(file).listdir(streams=True)
