@@ -1,9 +1,9 @@
-![DocuBleach](docs/images/bleach.jpg)
+![DocuBleach](https://raw.githubusercontent.com/Anti-Malware-Alliance/docubleach/refs/heads/main/docs/images/bleach.jpg)
 
 
 # DocuBleach
 
-A command-line tool designed to detect and purge any and all macros and dynamic content from commonly used office document formats (including MS Office Files, PDFs, etc.).
+A command-line tool designed to detect and purge macros from commonly used office document formats (including MS Office Files, PDFs, etc.).
 
 [![Super-Linter](https://github.com/Anti-Malware-Alliance/ms-office-macro-bleach/actions/workflows/pre-commit-actions.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ![Unit Tests](https://github.com/Anti-Malware-Alliance/ms-office-macro-bleach/actions/workflows/unit-tests.yml/badge.svg)
@@ -49,16 +49,16 @@ This Python tool aims to detect and remove any of this potentially malicious con
 
 ## Solution
 
-A command-line program written in modern Python (3.10+) that is capable of locating and removing macros and dynamic content from a variety of files.
+A command-line program written in modern Python (3.10+) that is capable of locating and removing macros from a variety of files.
 
 It should support all the common Office Open XML formats, 'legacy' MS binary files, and PDFs.
 
 
 ## Usage
 
-This package has not yet been published. It can be used, however, by cloning the repo, opening the command prompt in it, and running the following commands:
+This package has now been published to [PyPi](https://pypi.org/project/docubleach). Installation and usage are detailed below:
 
-1. ```poetry install```
-2. ```poetry run docubleach <PATH_TO_FILE>```
+1. ```pip install docubleach```
+2. ```docubleach <PATH_TO_FILE>```
 
 The optional '-c' flag may be appended to the final command to enable notification if any macros are detected.
