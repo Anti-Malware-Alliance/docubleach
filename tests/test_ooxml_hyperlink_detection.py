@@ -58,3 +58,23 @@ def test_word_document_with_macros():
     rezip_file(test_file)
 
     assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_word_template():
+    test_file = f"{test_dir}word_template.dotx"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_word_template_with_macros():
+    test_file = f"{test_dir}word_template_with_macros.dotm"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
