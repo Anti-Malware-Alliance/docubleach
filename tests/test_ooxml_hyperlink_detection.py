@@ -78,3 +78,13 @@ def test_word_template_with_macros():
     rezip_file(test_file)
 
     assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_powerpoint_presentation():
+    test_file = f"{test_dir}powerpoint_presentation.pptx"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks

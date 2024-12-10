@@ -18,7 +18,7 @@ Visit https://github.com/Anti-Malware-Alliance for more details
 about our organisation and projects.
 """
 from argparse import ArgumentParser
-from os import rename, path, remove
+from os import rename, path, remove, listdir
 from os.path import getsize
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
@@ -61,29 +61,36 @@ bff_macro_folders = [
     "_VBA_PROJECT_CUR",
 ]
 
-ooxml_relationship_files = {
-    "do": "/word/_rels/document.xml.rels",
+ooxml_relationship_folders = {
+    "do": ["/word/_rels"],
+    "pp": [
+        "/ppt/notesMasters/_rels",
+        "/ppt/notesSlides/_rels",
+        "/ppt/slideLayouts/_rels",
+        "/ppt/slideMasters/_rels",
+        "/ppt/slides/_rels"
+    ]
 }
 
 FILESIZE_LIMIT = 209715200
 
 
 def detect_ooxml_hyperlinks(file):
-    content_file_path = ooxml_relationship_files.get(file.split(".")[-1].lower()[:2])
-
-    tree = ElementTree.parse(file + "_temp" + content_file_path)
-    root = tree.getroot()
-
+    file_type = file.split(".")[-1].lower()
     namespace = {"ns": "http://schemas.openxmlformats.org/package/2006/relationships"}
+    relationship_folders = ooxml_relationship_folders.get(file_type[:2])
 
     hyperlinks = []
 
-    for relationship in root.findall("ns:Relationship", namespace):
-        if relationship.get("TargetMode") == "External":
-            hyperlink = relationship.get("Target")
-            if hyperlink:
-                hyperlinks.append(hyperlink)
-
+    for relationship_folder in relationship_folders:
+        for relationship_file in listdir(file + "_temp" + relationship_folder):
+            tree = ElementTree.parse(file + "_temp" + relationship_folder + "/" + relationship_file)
+            root = tree.getroot()
+            for relationship in root.findall("ns:Relationship", namespace):
+                if relationship.get("TargetMode") == "External":
+                    hyperlink = relationship.get("Target")
+                    if hyperlink:
+                        hyperlinks.append(hyperlink)
     return hyperlinks
 
 
