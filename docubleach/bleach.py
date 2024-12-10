@@ -24,6 +24,7 @@ from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
 from oletools.olevba import VBA_Parser
+from xml.etree import ElementTree
 
 ooxml_formats = [
     "docx",
@@ -60,7 +61,30 @@ bff_macro_folders = [
     "_VBA_PROJECT_CUR",
 ]
 
+ooxml_relationship_files = {
+    "do": "/word/_rels/document.xml.rels",
+}
+
 FILESIZE_LIMIT = 209715200
+
+
+def detect_ooxml_hyperlinks(file):
+    content_file_path = ooxml_relationship_files.get(file.split(".")[-1].lower()[:2])
+
+    tree = ElementTree.parse(file + "_temp" + content_file_path)
+    root = tree.getroot()
+
+    namespace = {"ns": "http://schemas.openxmlformats.org/package/2006/relationships"}
+
+    hyperlinks = []
+
+    for relationship in root.findall("ns:Relationship", namespace):
+        if relationship.get("TargetMode") == "External":
+            hyperlink = relationship.get("Target")
+            if hyperlink:
+                hyperlinks.append(hyperlink)
+
+    return hyperlinks
 
 
 def unzip_file(file):
