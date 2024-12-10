@@ -88,3 +88,53 @@ def test_powerpoint_presentation():
     rezip_file(test_file)
 
     assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_powerpoint_presentation_with_macros():
+    test_file = f"{test_dir}powerpoint_presentation_with_macros.pptm"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_powerpoint_show():
+    test_file = f"{test_dir}powerpoint_show.ppsx"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_powerpoint_show_with_macros():
+    test_file = f"{test_dir}powerpoint_show_with_macros.ppsm"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_powerpoint_template():
+    test_file = f"{test_dir}powerpoint_template.potx"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_powerpoint_template_with_macros():
+    test_file = f"{test_dir}powerpoint_template_with_macros.potm"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks

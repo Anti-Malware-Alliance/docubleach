@@ -69,6 +69,13 @@ ooxml_relationship_folders = {
         "/ppt/slideLayouts/_rels",
         "/ppt/slideMasters/_rels",
         "/ppt/slides/_rels"
+    ],
+    "po": [
+        "/ppt/notesMasters/_rels",
+        "/ppt/notesSlides/_rels",
+        "/ppt/slideLayouts/_rels",
+        "/ppt/slideMasters/_rels",
+        "/ppt/slides/_rels"
     ]
 }
 
