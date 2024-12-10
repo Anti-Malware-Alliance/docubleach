@@ -76,7 +76,8 @@ ooxml_relationship_folders = {
         "/ppt/slideLayouts/_rels",
         "/ppt/slideMasters/_rels",
         "/ppt/slides/_rels"
-    ]
+    ],
+    "xl": ["/xl/worksheets/_rels"]
 }
 
 FILESIZE_LIMIT = 209715200

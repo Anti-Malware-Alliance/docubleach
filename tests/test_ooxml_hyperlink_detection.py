@@ -138,3 +138,43 @@ def test_powerpoint_template_with_macros():
     rezip_file(test_file)
 
     assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_excel_spreadsheet():
+    test_file = f"{test_dir}excel_spreadsheet.xlsx"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_excel_spreadsheet_with_macros():
+    test_file = f"{test_dir}excel_spreadsheet_with_macros.xlsm"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_excel_template():
+    test_file = f"{test_dir}excel_template.xltx"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
+
+
+def test_excel_template_with_macros():
+    test_file = f"{test_dir}excel_template_with_macros.xltm"
+
+    unzip_file(test_file)
+    detected_hyperlinks = set(detect_ooxml_hyperlinks(test_file))
+    rezip_file(test_file)
+
+    assert detected_hyperlinks == actual_hyperlinks
