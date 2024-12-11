@@ -84,7 +84,7 @@ FILESIZE_LIMIT = 209715200
 
 
 def detect_ooxml_hyperlinks(file, notify=False):
-    file_type = file.split(".")[-1].lower()
+    file_type = get_file_extension(file)
     namespace = {"ns": "http://schemas.openxmlformats.org/package/2006/relationships"}
     relationship_folders = ooxml_relationship_folders.get(file_type[:2])
 
@@ -108,19 +108,8 @@ def detect_ooxml_hyperlinks(file, notify=False):
     return hyperlinks
 
 
-def unzip_file(file):
-    rename(file, file + ".zip")
-
-    with ZipFile(file + ".zip", 'r') as zip_ref:
-        zip_ref.extractall(file + "_temp")
-
-    remove(file + ".zip")
-
-
 def detect_macros(file):
-    file_type = file.split(".")[-1].lower()
-
-    if file_type in bff_formats:
+    if get_file_extension(file) in bff_formats:
         with OleFileIO(file, write_mode=False) as ole:
             streams = ole.listdir(streams=True)
             macro_streams = []
@@ -144,7 +133,7 @@ def detect_macros(file):
 
 
 def remove_macros(file, notify=False):
-    file_type = file.split(".")[-1].lower()
+    file_type = get_file_extension(file)
 
     if file_type in ooxml_formats:
         unzip_file(file)
@@ -157,7 +146,7 @@ def remove_macros(file, notify=False):
 
 
 def remove_bff_macros(file, notify):
-    file_type = file.split(".")[-1].lower()
+    file_type = get_file_extension(file)
     macros_found = False
 
     if file_type == "doc" or file_type == "xls":
@@ -192,9 +181,8 @@ def remove_bff_macros(file, notify):
 
 def remove_ooxml_macros(file, notify):
     macros_found = False
-    file_type = file.split(".")[-1].lower()
 
-    macro_folder = ooxml_macro_folders.get(file_type[:2])
+    macro_folder = ooxml_macro_folders.get(get_file_extension(file)[:2])
 
     if path.exists(file + f"_temp/{macro_folder}/vbaProject.bin"):
         remove(file + f"_temp/{macro_folder}/vbaProject.bin")
@@ -211,6 +199,15 @@ def remove_ooxml_macros(file, notify):
             print("No macros detected.")
 
 
+def unzip_file(file):
+    rename(file, file + ".zip")
+
+    with ZipFile(file + ".zip", 'r') as zip_ref:
+        zip_ref.extractall(file + "_temp")
+
+    remove(file + ".zip")
+
+
 def rezip_file(file):
     make_archive(file, "zip", file + "_temp")
     rename(file + ".zip", file)
@@ -218,9 +215,7 @@ def rezip_file(file):
 
 
 def validate_file(file):
-    filetype = file.split(".")[-1].lower()
-
-    if filetype in ooxml_formats or filetype in bff_formats:
+    if get_file_extension(file) in ooxml_formats + bff_formats:
         if getsize(file) < FILESIZE_LIMIT:
             return True
         else:
@@ -229,6 +224,10 @@ def validate_file(file):
     else:
         print("Unsupported file format.")
         return False
+
+
+def get_file_extension(file):
+    return file.split(".")[-1].lower()
 
 
 def main():
