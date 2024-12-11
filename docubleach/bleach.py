@@ -19,7 +19,7 @@ about our organisation and projects.
 """
 from argparse import ArgumentParser
 from os import rename, path, remove, listdir
-from os.path import getsize
+from os.path import getsize, isdir
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
@@ -83,7 +83,7 @@ ooxml_relationship_folders = {
 FILESIZE_LIMIT = 209715200
 
 
-def detect_ooxml_hyperlinks(file):
+def detect_ooxml_hyperlinks(file, notify=False):
     file_type = file.split(".")[-1].lower()
     namespace = {"ns": "http://schemas.openxmlformats.org/package/2006/relationships"}
     relationship_folders = ooxml_relationship_folders.get(file_type[:2])
@@ -91,14 +91,20 @@ def detect_ooxml_hyperlinks(file):
     hyperlinks = []
 
     for relationship_folder in relationship_folders:
-        for relationship_file in listdir(file + "_temp" + relationship_folder):
-            tree = ElementTree.parse(file + "_temp" + relationship_folder + "/" + relationship_file)
-            root = tree.getroot()
-            for relationship in root.findall("ns:Relationship", namespace):
-                if relationship.get("TargetMode") == "External":
-                    hyperlink = relationship.get("Target")
-                    if hyperlink:
-                        hyperlinks.append(hyperlink)
+        if isdir(file + "_temp" + relationship_folder):
+            for relationship_file in listdir(file + "_temp" + relationship_folder):
+                tree = ElementTree.parse(file + "_temp" + relationship_folder + "/" + relationship_file)
+                root = tree.getroot()
+                for relationship in root.findall("ns:Relationship", namespace):
+                    if relationship.get("TargetMode") == "External":
+                        hyperlink = relationship.get("Target")
+                        if hyperlink:
+                            hyperlinks.append(hyperlink)
+
+    if notify and len(hyperlinks) > 0:
+        for hyperlink in hyperlinks:
+            print("Found hyperlink: " + hyperlink)
+
     return hyperlinks
 
 
@@ -142,6 +148,7 @@ def remove_macros(file, notify=False):
 
     if file_type in ooxml_formats:
         unzip_file(file)
+        detect_ooxml_hyperlinks(file, notify)
         remove_ooxml_macros(file, notify)
         rezip_file(file)
 
@@ -176,8 +183,11 @@ def remove_bff_macros(file, notify):
         streams = OleFileIO(file).listdir(streams=True)
         # ppt logic here
 
-    if notify and macros_found:
-        print("Macros detected and removed.")
+    if notify:
+        if macros_found:
+            print("Macros detected and removed.")
+        else:
+            print("No macros detected.")
 
 
 def remove_ooxml_macros(file, notify):
@@ -194,8 +204,11 @@ def remove_ooxml_macros(file, notify):
         remove(file + f"_temp/{macro_folder}/vbaData.xml")
         macros_found = True
 
-    if notify and macros_found:
-        print("Macros detected and removed.")
+    if notify:
+        if macros_found:
+            print("Macros detected and removed.")
+        else:
+            print("No macros detected.")
 
 
 def rezip_file(file):
