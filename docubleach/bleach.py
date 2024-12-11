@@ -18,12 +18,13 @@ Visit https://github.com/Anti-Malware-Alliance for more details
 about our organisation and projects.
 """
 from argparse import ArgumentParser
-from os import rename, path, remove
-from os.path import getsize
+from os import rename, path, remove, listdir
+from os.path import getsize, isdir
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
 from oletools.olevba import VBA_Parser
+from xml.etree import ElementTree
 
 ooxml_formats = [
     "docx",
@@ -60,22 +61,55 @@ bff_macro_folders = [
     "_VBA_PROJECT_CUR",
 ]
 
+ooxml_relationship_folders = {
+    "do": ["/word/_rels"],
+    "pp": [
+        "/ppt/notesMasters/_rels",
+        "/ppt/notesSlides/_rels",
+        "/ppt/slideLayouts/_rels",
+        "/ppt/slideMasters/_rels",
+        "/ppt/slides/_rels"
+    ],
+    "po": [
+        "/ppt/notesMasters/_rels",
+        "/ppt/notesSlides/_rels",
+        "/ppt/slideLayouts/_rels",
+        "/ppt/slideMasters/_rels",
+        "/ppt/slides/_rels"
+    ],
+    "xl": ["/xl/worksheets/_rels"]
+}
+
 FILESIZE_LIMIT = 209715200
 
 
-def unzip_file(file):
-    rename(file, file + ".zip")
+def detect_ooxml_hyperlinks(file, notify=False):
+    file_type = get_file_extension(file)
+    namespace = {"ns": "http://schemas.openxmlformats.org/package/2006/relationships"}
+    relationship_folders = ooxml_relationship_folders.get(file_type[:2])
 
-    with ZipFile(file + ".zip", 'r') as zip_ref:
-        zip_ref.extractall(file + "_temp")
+    hyperlinks = []
 
-    remove(file + ".zip")
+    for relationship_folder in relationship_folders:
+        if isdir(file + "_temp" + relationship_folder):
+            for relationship_file in listdir(file + "_temp" + relationship_folder):
+                tree = ElementTree.parse(file + "_temp" + relationship_folder + "/" + relationship_file)
+                root = tree.getroot()
+                for relationship in root.findall("ns:Relationship", namespace):
+                    if relationship.get("TargetMode") == "External":
+                        hyperlink = relationship.get("Target")
+                        if hyperlink:
+                            hyperlinks.append(hyperlink)
+
+    if notify and len(hyperlinks) > 0:
+        for hyperlink in hyperlinks:
+            print("Found hyperlink: " + hyperlink)
+
+    return hyperlinks
 
 
 def detect_macros(file):
-    file_type = file.split(".")[-1].lower()
-
-    if file_type in bff_formats:
+    if get_file_extension(file) in bff_formats:
         with OleFileIO(file, write_mode=False) as ole:
             streams = ole.listdir(streams=True)
             macro_streams = []
@@ -99,10 +133,11 @@ def detect_macros(file):
 
 
 def remove_macros(file, notify=False):
-    file_type = file.split(".")[-1].lower()
+    file_type = get_file_extension(file)
 
     if file_type in ooxml_formats:
         unzip_file(file)
+        detect_ooxml_hyperlinks(file, notify)
         remove_ooxml_macros(file, notify)
         rezip_file(file)
 
@@ -111,7 +146,7 @@ def remove_macros(file, notify=False):
 
 
 def remove_bff_macros(file, notify):
-    file_type = file.split(".")[-1].lower()
+    file_type = get_file_extension(file)
     macros_found = False
 
     if file_type == "doc" or file_type == "xls":
@@ -137,15 +172,17 @@ def remove_bff_macros(file, notify):
         streams = OleFileIO(file).listdir(streams=True)
         # ppt logic here
 
-    if notify and macros_found:
-        print("Macros detected and removed.")
+    if notify:
+        if macros_found:
+            print("Macros detected and removed.")
+        else:
+            print("No macros detected.")
 
 
 def remove_ooxml_macros(file, notify):
     macros_found = False
-    file_type = file.split(".")[-1].lower()
 
-    macro_folder = ooxml_macro_folders.get(file_type[:2])
+    macro_folder = ooxml_macro_folders.get(get_file_extension(file)[:2])
 
     if path.exists(file + f"_temp/{macro_folder}/vbaProject.bin"):
         remove(file + f"_temp/{macro_folder}/vbaProject.bin")
@@ -155,8 +192,20 @@ def remove_ooxml_macros(file, notify):
         remove(file + f"_temp/{macro_folder}/vbaData.xml")
         macros_found = True
 
-    if notify and macros_found:
-        print("Macros detected and removed.")
+    if notify:
+        if macros_found:
+            print("Macros detected and removed.")
+        else:
+            print("No macros detected.")
+
+
+def unzip_file(file):
+    rename(file, file + ".zip")
+
+    with ZipFile(file + ".zip", 'r') as zip_ref:
+        zip_ref.extractall(file + "_temp")
+
+    remove(file + ".zip")
 
 
 def rezip_file(file):
@@ -166,9 +215,7 @@ def rezip_file(file):
 
 
 def validate_file(file):
-    filetype = file.split(".")[-1].lower()
-
-    if filetype in ooxml_formats or filetype in bff_formats:
+    if get_file_extension(file) in ooxml_formats + bff_formats:
         if getsize(file) < FILESIZE_LIMIT:
             return True
         else:
@@ -177,6 +224,10 @@ def validate_file(file):
     else:
         print("Unsupported file format.")
         return False
+
+
+def get_file_extension(file):
+    return file.split(".")[-1].lower()
 
 
 def main():

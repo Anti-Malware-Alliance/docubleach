@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docubleach"
-version = "0.1.0"
+version = "0.1.2"
 description = "Tool to purge and remove all macro and dynamic content from an MS Office file"
 authors = ["Patterbear"]
 license = "MIT"
