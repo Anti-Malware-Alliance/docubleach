@@ -61,4 +61,4 @@ This package has now been published to [PyPi](https://pypi.org/project/docubleac
 1. ```pip install docubleach```
 2. ```docubleach <PATH_TO_FILE>```
 
-The optional '-c' flag may be appended to the final command to enable notification if any macros are detected.
+The optional '-c' flag may be appended to the final command to enable notification if any macros or hyperlinks are detected.
