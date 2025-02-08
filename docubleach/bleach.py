@@ -20,9 +20,11 @@ about our organisation and projects.
 from argparse import ArgumentParser
 from os import rename, path, remove, listdir
 from os.path import getsize, isdir
+import re
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
+from oletools.oleobj import OleObject
 from oletools.olevba import VBA_Parser
 from xml.etree import ElementTree
 
@@ -81,6 +83,36 @@ ooxml_relationship_folders = {
 }
 
 FILESIZE_LIMIT = 209715200
+
+
+def detect_bff_hyperlinks(file, notify=False):
+    file_type = get_file_extension(file)
+    hyperlinks = []
+
+    ole = OleFileIO(file)
+
+    if file_type == "doc":
+        for entry in ole.listdir():
+            stream = ole.openstream(entry).read()
+            text_data = stream.decode(errors="ignore")
+
+            urls = re.findall(r"https?://[^\s\"'>]+", text_data)
+
+            # Remove irrelevant OOXML documentation link
+            if "http://schemas.openxmlformats.org/drawingml/2006/main" in urls:
+                urls.remove("http://schemas.openxmlformats.org/drawingml/2006/main")
+
+            cleaned_urls = [url.rstrip("\x15\x14\x13") for url in urls]  # removes trailing characters
+
+            hyperlinks.extend(cleaned_urls)
+
+    ole.close()
+
+    if notify and len(hyperlinks) > 0:
+        for hyperlink in hyperlinks:
+            print("Found hyperlink: " + hyperlink)
+
+    return hyperlinks
 
 
 def detect_ooxml_hyperlinks(file, notify=False):
