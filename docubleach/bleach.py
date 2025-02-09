@@ -84,12 +84,13 @@ ooxml_relationship_folders = {
 
 FILESIZE_LIMIT = 209715200
 
+
 def clean_urls(urls):
     cleaned_urls = []
 
     for url in urls:
-        if not url.startswith("http://schemas.openxmlformats.org/"):
-            url = re.sub(r'[^\x20-\x7E]', '', url).replace('(', '').replace(')', '') # remove trailing characters
+        if not url.startswith("http://schemas.openxmlformats.org/"):  # excludes open office specification links
+            url = re.sub(r'[^\x20-\x7E]', '', url)  # removes trailing characters
             if url not in cleaned_urls:
                 cleaned_urls.append(url)
 

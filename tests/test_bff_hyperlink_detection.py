@@ -1,10 +1,12 @@
-"""These tests are designed to check whether the program can detect explicit and implicit hyperlinks within legacy office files
+"""These tests check if the program can detect explicit and implicit hyperlinks within legacy office files
 
-Each test runs the hyperlink detection on each file and compares the output to a list of the actual hyperlinks in the file
+Each test runs the hyperlink detection function on each file
+
+ The resulting list is then compared to a list of the actual hyperlinks in the file
 
 Sets are used for expected and detected hyperlink lists as the order of the detected hyperlinks does not matter
 
-Just in case the hyperlink detection alters the original files, backups are made prior to and restored after, testing
+Backups of the test files are made prior to testing so that the original files can be restored afterwards
 
 All tests are written for and conducted using pytest.
 """
