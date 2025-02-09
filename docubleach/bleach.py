@@ -24,7 +24,6 @@ import re
 from zipfile import ZipFile
 from shutil import make_archive, rmtree
 from olefile import OleFileIO
-from oletools.oleobj import OleObject
 from oletools.olevba import VBA_Parser
 from xml.etree import ElementTree
 
