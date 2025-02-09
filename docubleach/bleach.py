@@ -26,6 +26,7 @@ from shutil import make_archive, rmtree
 from olefile import OleFileIO
 from oletools.olevba import VBA_Parser
 from xml.etree import ElementTree
+from xlrd import open_workbook
 
 ooxml_formats = [
     "docx",
@@ -83,29 +84,52 @@ ooxml_relationship_folders = {
 
 FILESIZE_LIMIT = 209715200
 
+def clean_urls(urls):
+    cleaned_urls = []
+
+    for url in urls:
+        if not url.startswith("http://schemas.openxmlformats.org/"):
+            url = re.sub(r'[^\x20-\x7E]', '', url).replace('(', '').replace(')', '') # remove trailing characters
+            if url not in cleaned_urls:
+                cleaned_urls.append(url)
+
+    return cleaned_urls
+
 
 def detect_bff_hyperlinks(file, notify=False):
     file_type = get_file_extension(file)
     hyperlinks = []
 
-    ole = OleFileIO(file)
-
     if file_type == "doc":
+        ole = OleFileIO(file)
+
         for entry in ole.listdir():
             stream = ole.openstream(entry).read()
             text_data = stream.decode(errors="ignore")
-
             urls = re.findall(r"https?://[^\s\"'>]+", text_data)
 
-            # Remove irrelevant OOXML documentation link
-            if "http://schemas.openxmlformats.org/drawingml/2006/main" in urls:
-                urls.remove("http://schemas.openxmlformats.org/drawingml/2006/main")
+            hyperlinks.extend(urls)
 
-            cleaned_urls = [url.rstrip("\x15\x14\x13") for url in urls]  # removes trailing characters
+        ole.close()
 
-            hyperlinks.extend(cleaned_urls)
+    elif file_type == "xls":
+        workbook = open_workbook(file, formatting_info=True)
 
-    ole.close()
+        for sheet in workbook.sheets():
+            for row_idx in range(sheet.nrows):
+                for col_idx in range(sheet.ncols):
+                    cell_value = sheet.cell_value(row_idx, col_idx)
+
+                    # Explicit hyperlinks
+                    if isinstance(cell_value, str) and cell_value.startswith("http"):
+                        hyperlinks.append(cell_value)
+
+                    # Implicit hyperlinks
+                    link = sheet.hyperlink_map.get((row_idx, col_idx))
+                    if link:
+                        hyperlinks.append(link.url_or_path)
+
+    hyperlinks = clean_urls(hyperlinks)
 
     if notify and len(hyperlinks) > 0:
         for hyperlink in hyperlinks:
@@ -173,6 +197,7 @@ def remove_macros(file, notify=False):
         rezip_file(file)
 
     if file_type in bff_formats:
+        detect_bff_hyperlinks(file, notify)
         remove_bff_macros(file, notify)
 
 

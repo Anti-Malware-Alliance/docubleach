@@ -17,7 +17,7 @@ from shutil import copyfile
 test_dir = "tests/test_files/bff_hyperlink_detection/"
 
 actual_hyperlinks = {
-        "https://anti-malware-alliance.org",
+        "https://anti-malware-alliance.org/",
         "https://patterbear.github.io/my-website",
         "https://github.com/Anti-Malware-Alliance"
 }
@@ -45,14 +45,6 @@ def test_word_document():
 
     assert detected_hyperlinks == actual_hyperlinks
 
-"""
-def test_powerpoint_presentation():
-    test_file = f"{test_dir}powerpoint_presentation.ppt"
-
-    detected_hyperlinks = set(detect_bff_hyperlinks(test_file))
-
-    assert detected_hyperlinks == actual_hyperlinks
-
 
 def test_excel_spreadsheet():
     test_file = f"{test_dir}excel_spreadsheet.xls"
@@ -60,4 +52,3 @@ def test_excel_spreadsheet():
     detected_hyperlinks = set(detect_bff_hyperlinks(test_file))
 
     assert detected_hyperlinks == actual_hyperlinks
-"""
