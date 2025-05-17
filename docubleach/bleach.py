@@ -215,11 +215,13 @@ def rezip_file(file):
 
 
 def validate_file(file):
-    if not(path.exists(file)):
+    if not path.exists(file):
         print(f"File '{file}' does not exist.")
         return False
 
-    if not has_file_extension or get_file_extension(file) not in ooxml_formats + bff_formats:
+    valid_formats = ooxml_formats + bff_formats
+
+    if not has_file_extension or get_file_extension(file) not in valid_formats:
         print("Unsupported file format.")
         return False
 
