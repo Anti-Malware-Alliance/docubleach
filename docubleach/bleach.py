@@ -215,14 +215,26 @@ def rezip_file(file):
 
 
 def validate_file(file):
-    if get_file_extension(file) in ooxml_formats + bff_formats:
-        if getsize(file) < FILESIZE_LIMIT:
-            return True
-        else:
-            print("File exceeds size limit.")
-            return False
-    else:
+    if not(path.exists(file)):
+        print(f"File '{file}' does not exist.")
+        return False
+
+    if not has_file_extension or get_file_extension(file) not in ooxml_formats + bff_formats:
         print("Unsupported file format.")
+        return False
+
+    if getsize(file) >= FILESIZE_LIMIT:
+        print("File exceeds size limit.")
+        return False
+
+    return True
+
+
+def has_file_extension(file):
+    if '.' in file:
+        if file.split('.')[-1] != '' and file.split('.')[0] != '':
+            return True
+    else:
         return False
 
 
