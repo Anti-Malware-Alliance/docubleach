@@ -77,3 +77,27 @@ def test_invalid_file_size():
     remove(f"{test_dir}invalid_file_size.docx")
 
     assert output == "File exceeds size limit.\n"
+
+
+def test_non_existent_file():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}non_existent_file.txt"], encoding='utf-8')
+
+    assert output == f"File '{test_dir}non_existent_file.txt' does not exist.\n"
+
+
+def test_file_without_extension():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}file_without_extension"], encoding='utf-8')
+
+    assert output == "Unsupported file format.\n"
+
+
+def test_file_without_name():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}.doc"], encoding='utf-8')
+
+    assert output == "Unsupported file format.\n"
+
+
+def test_file_without_name_or_extension():
+    output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}"], encoding='utf-8')
+
+    assert output == "Unsupported file format.\n"
