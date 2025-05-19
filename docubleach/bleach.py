@@ -221,8 +221,6 @@ def validate_file(file):
 
     valid_formats = ooxml_formats + bff_formats
 
-    has_filename_and_extension(file)
-
     if not has_filename_and_extension(file) or get_file_extension(file) not in valid_formats:
         print("Unsupported file format.")
         return False
