@@ -221,7 +221,9 @@ def validate_file(file):
 
     valid_formats = ooxml_formats + bff_formats
 
-    if not has_file_extension(file) or get_file_extension(file) not in valid_formats:
+    has_filename_and_extension(file)
+
+    if not has_filename_and_extension(file) or get_file_extension(file) not in valid_formats:
         print("Unsupported file format.")
         return False
 
@@ -232,12 +234,11 @@ def validate_file(file):
     return True
 
 
-def has_file_extension(file):
-    if '.' in file:
-        if file.split('.')[-1] != '' and file.split('.')[0] != '':
-            return True
-    else:
-        return False
+def has_filename_and_extension(file):
+    file_without_path = path.basename(file)
+    filename, extension = path.splitext(file_without_path)
+
+    return filename != '' and extension != ''
 
 
 def get_file_extension(file):
