@@ -85,7 +85,7 @@ def test_non_existent_file():
     assert output == f"File '{test_dir}non_existent_file.txt' does not exist.\n"
 
 
-def file_without_extension():
+def test_file_without_extension():
     output = check_output(["python", f"{prog_dir}bleach.py", f"{test_dir}file_without_extension"], encoding='utf-8')
 
     assert output == "Unsupported file format.\n"
